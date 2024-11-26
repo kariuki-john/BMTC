@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import CustomerFeedback from "./customerFeedback";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Applications = () => {
   const [applications, setApplications] = useState([]);
@@ -9,22 +11,32 @@ const Applications = () => {
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [selectedApplication, setSelectedApplication] = useState(null);
   const [activeTab, setActiveTab] = useState("applications");
+  const navigate = useNavigate()
+
+  axios.defaults.withCredentials = true;
 
   useEffect(() => {
     const fetchApplications = async () => {
-      try {
-        const response = await fetch("http://localhost:5000/api/getApplications");
-        const data = await response.json();
-        setApplications(data);
-      } catch (error) {
-        console.error("Error fetching applications:", error);
-      } finally {
-        setLoading(false);
-      }
+        try {
+            const verifyRes = await axios.get('http://localhost:5000/api/verify');
+            
+            if (verifyRes.data.status) {
+                const appRes = await fetch("http://localhost:5000/api/getApplications");
+                const appData = await appRes.json();
+                setApplications(appData);
+            } else {
+                navigate('/login');
+            }
+        } catch (error) {
+            console.error("Error fetching applications:", error);
+        } finally {
+            setLoading(false);
+        }
     };
 
     fetchApplications();
-  }, []);
+}, [navigate]);
+
 
   const updateStatus = async (id, newStatus) => {
     try {
@@ -53,7 +65,7 @@ const Applications = () => {
   const getStatusColor = (status) => {
     switch (status) {
       case "Pending Approval":
-        return "bg-yellow-300";
+        return "bg-orange-300";
       case "Approved":
         return "bg-green-500";
       case "Rejected":
@@ -62,6 +74,18 @@ const Applications = () => {
         return "";
     }
   };
+  axios.defaults.withCredentials = true;
+const handleLogout = () => {
+  axios.get('http://localhost:5000/api/logout')
+  .then(res => {
+    if(res.data.status){
+      navigate('/login')
+    }
+  }).catch(err =>{
+    console.log(err, err.message);
+    
+  })
+}
 
   const handlePrint = () => {
     const printContent = document.getElementById("applicant-table").innerHTML;
@@ -135,6 +159,11 @@ const Applications = () => {
         >
           Customer Feedback
         </button>
+        <button
+        onClick={handleLogout}
+        className="bg-red-500 p-2 rounded-lg  flex align-end justify-center text-black font-italic">
+          Logout
+        </button>{" "}
       </div>
 
       {/* Print Button */}
