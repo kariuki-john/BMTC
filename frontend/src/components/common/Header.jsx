@@ -13,7 +13,7 @@ export const Header = () => {
   };
 
   const handlePageAdmin = () => {
-    navigate('/adminPage')
+    navigate('/login')
   }
   return (
     <>
@@ -48,7 +48,7 @@ export const Header = () => {
               APPLY NOW
             </button>
             <button onClick={handlePageAdmin} className="bg-buttoncolor p-2 rounded-lg  flex align-center justify-center text-black font-bold">
-              ADMIN PORTAL
+              LOGIN
             </button>{" "}
             <button className="open-menu" onClick={() => setOpen(!open)}>
               <HiOutlineMenuAlt1 size={25} />

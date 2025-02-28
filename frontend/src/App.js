@@ -9,6 +9,8 @@ import { Blog } from "./pages/Blog";
 import { Training } from "./pages/Training";
 import Applications from "./pages/Applications";
 import ApplicationForm from "./components/common/applyForm";
+import Login from "./pages/login";
+
 
 
 function App() {
@@ -73,6 +75,14 @@ function App() {
           }
           />
           <Route
+          path="/login"
+          element={
+            <Layout>
+              <Login/>
+            </Layout>
+          }
+          />
+           <Route
           path="/adminPage"
           element={
             <Layout>
@@ -80,6 +90,7 @@ function App() {
             </Layout>
           }
           />
+          
         </Routes>
       </BrowserRouter>
     </>
